@@ -1,0 +1,13 @@
+[package]
+name = "timelapse"
+version = "0.1.0"
+authors = ["Guy Turcotte"]
+description = "A Rust library for simple performance measurement of code."
+readme = "README.md"
+repository = "https://github.com/turgu1/timelapse"
+keywords = ["timelapse", "profiler", "performance", "measurement"]
+edition = "2021"
+license = "MIT"
+
+[dependencies]
+log = "0.4.27"
