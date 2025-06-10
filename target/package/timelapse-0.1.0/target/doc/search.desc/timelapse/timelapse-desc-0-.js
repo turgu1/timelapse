@@ -1,0 +1,1 @@
+searchState.loadedDescShard("timelapse", 0, "A simple profiler for Rust applications.\nA simple profiler for measuring elapsed time in Rust.\nReturns the argument unchanged.\nCalls <code>U::from(self)</code>.")

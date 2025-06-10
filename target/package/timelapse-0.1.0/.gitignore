@@ -2,4 +2,5 @@
 /target/release/
 **/*.rs.bk
 Cargo.lock
+/target/.rust_info.json
 /target/CACHEDIR.TAG
