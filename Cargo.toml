@@ -1,6 +1,6 @@
 [package]
 name = "timelapse"
-version = "0.1.1"
+version = "0.1.2"
 authors = ["Guy Turcotte"]
 description = "A Rust library for simple performance measurement of code."
 readme = "README.md"

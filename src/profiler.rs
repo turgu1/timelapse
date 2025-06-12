@@ -10,7 +10,20 @@ use log::info;
 use std::time::{Duration, Instant};
 
 /// The `profile_start!` macro initializes a `TimeLapse` instance to start profiling.
-/// It takes an identifier as an argument, which will be used to reference the profiler instance.
+/// It takes an identifier as an argument, which will be instantiated and used to reference the profiler instance.
+///
+/// # Usage
+/// ```rust
+/// use std::time::Duration;
+/// use timelapse::{TimeLapse, profile_start, profile_end};
+///
+/// profile_start!(my_profiler);
+///
+/// std::thread::sleep(Duration::from_millis(100));
+/// assert!(my_profiler.elapsed().as_millis() >= 100);
+///
+/// profile_end!(my_profiler);
+/// ```
 #[macro_export]
 macro_rules! profile_start {
     ($name:ident) => {
@@ -20,6 +33,18 @@ macro_rules! profile_start {
 
 /// The `profile_end!` macro logs the elapsed time of the profiling instance created by `profile_start!`.
 /// These macros are useful for quick profiling without needing to manually create and manage `TimeLapse` instances.
+/// # Usage
+/// ```rust
+/// use std::time::Duration;
+/// use timelapse::{TimeLapse, profile_start, profile_end};
+///
+/// profile_start!(my_profiler);
+///
+/// std::thread::sleep(Duration::from_millis(100));
+/// assert!(my_profiler.elapsed().as_millis() >= 100);
+///
+/// profile_end!(my_profiler);
+/// ```
 #[macro_export]
 macro_rules! profile_end {
     ($name:ident) => {
