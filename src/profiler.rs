@@ -6,7 +6,7 @@
 //! See the tesing examples at the end of this source file for usage.
 
 #![allow(unused)]
-use log::info;
+use log::{log, Level};
 use std::time::{Duration, Instant};
 
 /// The `profile_start!` macro initializes a `TimeLapse` instance to start profiling.
@@ -31,7 +31,7 @@ macro_rules! profile_start {
     };
 }
 
-/// The `profile_end!` macro logs the elapsed time of the profiling instance created by `profile_start!`.
+/// The `profile_end!` macro logs at the info level the elapsed time of the profiling instance created by `profile_start!`.
 /// These macros are useful for quick profiling without needing to manually create and manage `TimeLapse` instances.
 /// # Usage
 /// ```rust
@@ -48,7 +48,48 @@ macro_rules! profile_start {
 #[macro_export]
 macro_rules! profile_end {
     ($name:ident) => {
-        $name.log(stringify!($name));
+        $name.log(stringify!($name), log::Level::Info);
+    };
+}
+
+/// The `profile_end_print!` macro prints the elapsed time of the profiling instance created by `profile_start!`.
+/// This macro is useful for quick profiling without needing to manually create and manage `TimeLapse` instances.
+/// # Usage
+/// ```rust
+/// use std::time::Duration;
+/// use timelapse::{TimeLapse, profile_start, profile_end_print};
+///
+/// profile_start!(my_profiler);
+/// std::thread::sleep(Duration::from_millis(100));
+/// assert!(my_profiler.elapsed().as_millis() >= 100);
+/// profile_end_print!(my_profiler);
+/// ```
+#[macro_export]
+macro_rules! profile_end_print {
+    ($name:ident) => {
+        $name.print(stringify!($name));
+    };
+}
+
+/// The `profile_end_log!` macro logs the elapsed time of the profiling instance created by `profile_start!`.
+/// It allows specifying the log level for the message.
+/// This macro is useful for quick profiling without needing to manually create and manage `TimeLapse` instances.
+///
+/// # Usage
+/// ```rust
+/// use std::time::Duration;
+/// use timelapse::{TimeLapse, profile_start, profile_end_log};
+/// use log::Level;
+///
+/// profile_start!(my_profiler);
+/// std::thread::sleep(Duration::from_millis(100));
+/// assert!(my_profiler.elapsed().as_millis() >= 100);
+/// profile_end_log!(my_profiler, level: Level::Info);
+/// ```
+#[macro_export]
+macro_rules! profile_end_log {
+    ($name:ident, level: $level:expr) => {
+        $name.log(stringify!($name), $level);
     };
 }
 
@@ -102,8 +143,18 @@ impl std::default::Default for TimeLapse {
 
 impl TimeLapse {
     /// Logs the elapsed time with a given name.
-    pub fn log(&self, name: &str) {
-        info!("TimeLapse {} - Elapsed time: {:?}", name, self.elapsed());
+    pub fn log(&self, name: &str, level: Level) {
+        log!(
+            level,
+            "TimeLapse {} - Elapsed time: {:?}",
+            name,
+            self.elapsed()
+        );
+    }
+
+    /// Prints the elapsed time with a given name.
+    pub fn print(&self, name: &str) {
+        println!("TimeLapse {} - Elapsed time: {:?}", name, self.elapsed());
     }
 }
 
@@ -116,7 +167,7 @@ mod tests {
         let profiler = TimeLapse::new();
         std::thread::sleep(Duration::from_millis(100));
         assert!(profiler.elapsed().as_millis() >= 100);
-        profiler.log("test");
+        profiler.print("test");
     }
 
     #[test]
@@ -124,7 +175,7 @@ mod tests {
         profile_start!(the_profile);
         std::thread::sleep(Duration::from_millis(100));
         assert!(the_profile.elapsed().as_millis() >= 100);
-        profile_end!(the_profile);
+        profile_end_print!(the_profile);
     }
 
     #[test]
